@@ -10,6 +10,11 @@ in
     packages = [
       toolchain
       pkgs.protobuf_23
+      pkgs.openssl
+    ];
+
+    nativeBuildInputs = with pkgs; [
+      pkg-config
     ];
   }
 

@@ -13,5 +13,5 @@ async fn main() {
     let x = client.get_details("ticker").await.unwrap();
 
     
-    println!("{:?}", x.results.description);
+    println!("{:?}", x);
 }

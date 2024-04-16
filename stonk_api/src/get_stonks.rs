@@ -7,14 +7,19 @@ pub fn test_mod() {
     println!("hello world!")
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Payload {
    pub results: Results
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Results{
-    pub description: String,
-    pub ticker: String,
+    pub description: Option<String>,
+    pub ticker: Option<String>,
+    pub active: Option<bool>,
+    pub currency_name: Option<String>,
+    pub primary_exchange: Option<String>,
+
+
 }
 
 #[derive(Debug)]

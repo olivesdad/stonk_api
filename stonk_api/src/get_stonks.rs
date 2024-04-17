@@ -1,26 +1,5 @@
-use std::iter::Map;
-
-use reqwest::{header, Client, Error, RequestBuilder, Response};
-use serde::{Serialize, Deserialize};
-
-pub fn test_mod() {
-    println!("hello world!")
-}
-
-#[derive(Deserialize, Debug)]
-pub struct Payload {
-   pub results: Results
-}
-#[derive(Deserialize, Debug)]
-pub struct Results{
-    pub description: Option<String>,
-    pub ticker: Option<String>,
-    pub active: Option<bool>,
-    pub currency_name: Option<String>,
-    pub primary_exchange: Option<String>,
-
-
-}
+use reqwest::{header, Client, Error};
+use crate::data_structures;
 
 #[derive(Debug)]
 pub struct StockGetter {
@@ -33,6 +12,8 @@ impl StockGetter {
         let auth = ["Bearer ", key].concat(); 
         let mut headers = header::HeaderMap::new();
         headers.insert("Authorization", header::HeaderValue::from_str(&auth).unwrap());
+
+        // use request builder to make client 
         Self {
             requester: reqwest::Client::builder()
                 .default_headers(headers)
@@ -41,9 +22,14 @@ impl StockGetter {
         }
     }
 
-    pub async fn get_details(&self, ticker: &str) -> Result<Payload, Error> {
-        self.requester.get("https://api.polygon.io/v3/reference/tickers/AAPL").send().await.unwrap()
-        .json::<Payload>()
+    // Send request to tickers endpoint to get info about the ticker passed to the fn
+    pub async fn get_ticker_details(&self, tick: &str) -> Result<data_structures::Ticker, Error> {
+        // form url
+        let url: String = ["https://api.polygon.io/v3/reference/tickers/", tick].concat();
+        
+        // Send request and await response
+        self.requester.get(url).send().await?
+        .json::<data_structures::Ticker>()
         .await
     }
 }

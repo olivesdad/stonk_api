@@ -18,7 +18,7 @@ impl StockGetter {
             requester: reqwest::Client::builder()
                 .default_headers(headers)
                 .build()
-                .unwrap(),
+                .unwrap(), // Just unwrap it because if we fail to build the client we're dead
         }
     }
 
@@ -28,8 +28,7 @@ impl StockGetter {
         let url: String = ["https://api.polygon.io/v3/reference/tickers/", tick].concat();
         
         // Send request and await response
-        self.requester.get(url).send().await?
-        .json::<data_structures::Ticker>()
-        .await
+
+        
     }
 }

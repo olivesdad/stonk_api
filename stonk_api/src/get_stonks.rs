@@ -1,5 +1,5 @@
-use reqwest::{header, Client, Error};
 use crate::data_structures;
+use reqwest::{header, Client, Error};
 
 #[derive(Debug)]
 pub struct StockGetter {
@@ -8,12 +8,14 @@ pub struct StockGetter {
 
 impl StockGetter {
     pub fn new<'a>(key: &'a str) -> Self {
-
-        let auth = ["Bearer ", key].concat(); 
+        let auth = ["Bearer ", key].concat();
         let mut headers = header::HeaderMap::new();
-        headers.insert("Authorization", header::HeaderValue::from_str(&auth).unwrap());
+        headers.insert(
+            "Authorization",
+            header::HeaderValue::from_str(&auth).unwrap(),
+        );
 
-        // use request builder to make client 
+        // use request builder to make client
         Self {
             requester: reqwest::Client::builder()
                 .default_headers(headers)
@@ -26,9 +28,13 @@ impl StockGetter {
     pub async fn get_ticker_details(&self, tick: &str) -> Result<data_structures::Ticker, Error> {
         // form url
         let url: String = ["https://api.polygon.io/v3/reference/tickers/", tick].concat();
-        
-        // Send request and await response
 
-        
+        // Send request and await response
+        self.requester
+            .get(url)
+            .send()
+            .await?
+            .json::<data_structures::Ticker>()
+            .await
     }
 }

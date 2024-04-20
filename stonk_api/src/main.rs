@@ -8,7 +8,7 @@ async fn main() {
 
     println!("{:?}", client);
 
-    let x = client.get_ticker_details("AMD").await.unwrap();
+    let x = client.get_ticker_details("tsla").await.unwrap();
 
     println!("{:?}", x);
 }
